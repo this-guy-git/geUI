@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>geUI Emulator Frontend</title>
+  <style>
+    html,
+    body,
+    #root {
+      height: 100%;
+      margin: 0;
+    }
+
+    body {
+      background: #0d111d;
+      color: #fff;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: #4666ff #101726;
+    }
+
+    body::-webkit-scrollbar {
+      width: 12px;
+    }
+
+    body::-webkit-scrollbar-track {
+      background: #101726;
+      border-left: 1px solid rgba(112, 146, 255, 0.12);
+    }
+
+    body::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, #71a7ff 0%, #4666ff 100%);
+      border-radius: 999px;
+      border: 3px solid #101726;
+    }
+
+    body::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(180deg, #8ec0ff 0%, #5a78ff 100%);
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script src="./dist/bundle.js"></script>
+</body>
+</html>
