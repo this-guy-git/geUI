@@ -13,12 +13,14 @@ const STICK_DEADZONE = 0.45;
 const NAV_FIRST_REPEAT_MS = 210;
 const NAV_REPEAT_MS = 95;
 const VOLUME_REPEAT_MS = 80;
+type ThemeVariant = 'light' | 'dark';
 
 type WiiUTileProps = {
   game: GameEntry;
   tileSize: number;
   isHovered: boolean;
   isFocused: boolean;
+  themeVariant: ThemeVariant;
   onActivate: () => void;
   onHoverStart: () => void;
   onHoverEnd: () => void;
@@ -107,7 +109,8 @@ const createRandomShards = (count: number): FloatShard[] =>
     };
   });
 
-const WiiUTile: React.FC<WiiUTileProps> = ({ game, tileSize, isHovered, isFocused, onActivate, onHoverStart, onHoverEnd }) => {
+const WiiUTile: React.FC<WiiUTileProps> = ({ game, tileSize, isHovered, isFocused, themeVariant, onActivate, onHoverStart, onHoverEnd }) => {
+  const isDark = themeVariant === 'dark';
   const [thumbnailIndex, setThumbnailIndex] = useState(0);
   const currentThumbnail = game.thumbnailUrls[thumbnailIndex];
 
@@ -125,13 +128,15 @@ const WiiUTile: React.FC<WiiUTileProps> = ({ game, tileSize, isHovered, isFocuse
         width: tileSize,
         height: tileSize,
         borderRadius: 20,
-        border: '1px solid rgba(176, 189, 200, 0.96)',
-        background: 'linear-gradient(180deg, rgba(255,255,255,0.97) 0%, rgba(231,238,244,0.96) 100%)',
+        border: isDark ? '1px solid rgba(84, 103, 121, 0.72)' : '1px solid rgba(176, 189, 200, 0.96)',
+        background: isDark ? 'linear-gradient(180deg, rgba(33,42,55,0.98) 0%, rgba(19,26,36,0.98) 100%)' : 'linear-gradient(180deg, rgba(255,255,255,0.97) 0%, rgba(231,238,244,0.96) 100%)',
         boxShadow: isFocused
-          ? '0 0 0 3px rgba(0, 189, 232, 0.36), 0 12px 22px rgba(41, 53, 70, 0.22), inset 0 1px 0 rgba(255,255,255,0.98)'
+          ? (isDark
+            ? '0 0 0 3px rgba(0, 189, 232, 0.28), 0 12px 22px rgba(0, 0, 0, 0.38), inset 0 1px 0 rgba(255,255,255,0.08)'
+            : '0 0 0 3px rgba(0, 189, 232, 0.36), 0 12px 22px rgba(41, 53, 70, 0.22), inset 0 1px 0 rgba(255,255,255,0.98)')
           : isHovered
-          ? '0 10px 20px rgba(41, 53, 70, 0.2), inset 0 1px 0 rgba(255,255,255,0.96)'
-          : '0 4px 10px rgba(55, 68, 88, 0.14), inset 0 1px 0 rgba(255,255,255,0.94)',
+          ? (isDark ? '0 10px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255,255,255,0.06)' : '0 10px 20px rgba(41, 53, 70, 0.2), inset 0 1px 0 rgba(255,255,255,0.96)')
+          : (isDark ? '0 4px 10px rgba(0, 0, 0, 0.26), inset 0 1px 0 rgba(255,255,255,0.04)' : '0 4px 10px rgba(55, 68, 88, 0.14), inset 0 1px 0 rgba(255,255,255,0.94)'),
         display: 'grid',
         placeItems: 'center',
         position: 'relative',
@@ -149,8 +154,8 @@ const WiiUTile: React.FC<WiiUTileProps> = ({ game, tileSize, isHovered, isFocuse
           width: tileSize - 8,
           height: tileSize - 8,
           borderRadius: 17,
-          border: '1px solid rgba(192, 204, 214, 0.75)',
-          background: 'linear-gradient(180deg, rgba(255,255,255,0.65) 0%, rgba(233,241,246,0.45) 100%)',
+          border: isDark ? '1px solid rgba(90, 108, 126, 0.68)' : '1px solid rgba(192, 204, 214, 0.75)',
+          background: isDark ? 'linear-gradient(180deg, rgba(52,64,79,0.72) 0%, rgba(29,36,46,0.62) 100%)' : 'linear-gradient(180deg, rgba(255,255,255,0.65) 0%, rgba(233,241,246,0.45) 100%)',
           display: 'grid',
           placeItems: 'center',
           overflow: 'hidden',
@@ -171,7 +176,7 @@ const WiiUTile: React.FC<WiiUTileProps> = ({ game, tileSize, isHovered, isFocuse
             }}
           />
         ) : (
-          <div style={{ fontSize: 32, color: '#5c6d86' }}>🎮</div>
+          <div style={{ fontSize: 32, color: isDark ? '#9db0c3' : '#5c6d86' }}>🎮</div>
         )}
       </div>
 
@@ -201,10 +206,10 @@ const WiiUTile: React.FC<WiiUTileProps> = ({ game, tileSize, isHovered, isFocuse
             textOverflow: 'ellipsis',
             padding: '9px 14px',
             borderRadius: 15,
-            border: '1px solid rgba(196, 208, 218, 0.95)',
-            background: 'rgba(255,255,255,0.96)',
+            border: isDark ? '1px solid rgba(88, 104, 120, 0.9)' : '1px solid rgba(196, 208, 218, 0.95)',
+            background: isDark ? 'rgba(14, 18, 25, 0.96)' : 'rgba(255,255,255,0.96)',
             boxShadow: '0 10px 20px rgba(42, 57, 77, 0.2)',
-            color: '#3d4a5f',
+            color: isDark ? '#eef7ff' : '#3d4a5f',
             fontSize: 14,
             fontWeight: 600,
             zIndex: 50,
@@ -219,9 +224,9 @@ const WiiUTile: React.FC<WiiUTileProps> = ({ game, tileSize, isHovered, isFocuse
               width: 10,
               height: 10,
               transform: 'translateX(-50%) rotate(-45deg)',
-              borderLeft: '1px solid rgba(196, 208, 218, 0.95)',
-              borderBottom: '1px solid rgba(196, 208, 218, 0.95)',
-              background: 'rgba(255,255,255,0.96)',
+              borderLeft: isDark ? '1px solid rgba(88, 104, 120, 0.9)' : '1px solid rgba(196, 208, 218, 0.95)',
+              borderBottom: isDark ? '1px solid rgba(88, 104, 120, 0.9)' : '1px solid rgba(196, 208, 218, 0.95)',
+              background: isDark ? 'rgba(14, 18, 25, 0.96)' : 'rgba(255,255,255,0.96)',
             }}
           />
         </div>
@@ -230,8 +235,12 @@ const WiiUTile: React.FC<WiiUTileProps> = ({ game, tileSize, isHovered, isFocuse
   );
 };
 
-export const ThemeWiiU: React.FC<{ config: Config; selectedEmu: number; setSelectedEmu: (i: number) => void; onVolumeAdjust?: (delta: number) => void; onToggleMute?: () => void }> = ({ config, selectedEmu, setSelectedEmu, onVolumeAdjust, onToggleMute }) => {
+export const ThemeWiiU: React.FC<{ config: Config; selectedEmu: number; setSelectedEmu: (i: number) => void; themeVariant: ThemeVariant; inputLocked?: boolean; onVolumeAdjust?: (delta: number) => void; onToggleMute?: () => void }> = ({ config, selectedEmu, setSelectedEmu, themeVariant, inputLocked = false, onVolumeAdjust, onToggleMute }) => {
   const emu = config.emulators[selectedEmu];
+  const isDark = themeVariant === 'dark';
+  const textMain = isDark ? '#e8f1f8' : '#3c4a5f';
+  const textMuted = isDark ? '#9db0c3' : '#697a90';
+  const textStrong = isDark ? '#eef7ff' : '#3d4a5f';
   const [games, setGames] = useState<GameEntry[]>([]);
   const [viewport, setViewport] = useState({ width: window.innerWidth, height: window.innerHeight });
   const [currentPage, setCurrentPage] = useState(0);
@@ -249,10 +258,6 @@ export const ThemeWiiU: React.FC<{ config: Config; selectedEmu: number; setSelec
     down: { active: false, nextAt: 0 },
     left: { active: false, nextAt: 0 },
     right: { active: false, nextAt: 0 },
-  });
-  const shoulderHoldRef = useRef<Record<'lb' | 'rb', { active: boolean; nextAt: number }>>({
-    lb: { active: false, nextAt: 0 },
-    rb: { active: false, nextAt: 0 },
   });
   const triggerHoldRef = useRef<Record<'lt' | 'rt', { active: boolean; nextAt: number }>>({
     lt: { active: false, nextAt: 0 },
@@ -526,6 +531,24 @@ export const ThemeWiiU: React.FC<{ config: Config; selectedEmu: number; setSelec
       const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
       const pad = Array.from(gamepads).find(candidate => candidate && candidate.connected && candidate.mapping === 'standard');
 
+      if (inputLocked) {
+        setControllerActive(false);
+
+        navHoldRef.current.up.active = false;
+        navHoldRef.current.down.active = false;
+        navHoldRef.current.left.active = false;
+        navHoldRef.current.right.active = false;
+        triggerHoldRef.current.lt.active = false;
+        triggerHoldRef.current.rt.active = false;
+        volumeStickHoldRef.current.up.active = false;
+        volumeStickHoldRef.current.down.active = false;
+        faceButtonHoldRef.current.a = false;
+        stickButtonHoldRef.current.r3 = false;
+
+        rafId = window.requestAnimationFrame(tick);
+        return;
+      }
+
       if (pad) {
         setControllerActive(true);
         const now = performance.now();
@@ -537,8 +560,6 @@ export const ThemeWiiU: React.FC<{ config: Config; selectedEmu: number; setSelec
         const pressRight = !!buttons[15]?.pressed || axisX >= STICK_DEADZONE;
         const pressUp = !!buttons[12]?.pressed || axisY <= -STICK_DEADZONE;
         const pressDown = !!buttons[13]?.pressed || axisY >= STICK_DEADZONE;
-        const pressLB = !!buttons[4]?.pressed;
-        const pressRB = !!buttons[5]?.pressed;
         const pressLT = !!buttons[6]?.pressed || (buttons[6]?.value || 0) > 0.4;
         const pressRT = !!buttons[7]?.pressed || (buttons[7]?.value || 0) > 0.4;
         const pressA = !!buttons[0]?.pressed;
@@ -551,8 +572,6 @@ export const ThemeWiiU: React.FC<{ config: Config; selectedEmu: number; setSelec
         tryRepeat(pressRight, navHoldRef.current.right, now, () => moveFocus(1, 0));
         tryRepeat(pressUp, navHoldRef.current.up, now, () => moveFocus(0, -1));
         tryRepeat(pressDown, navHoldRef.current.down, now, () => moveFocus(0, 1));
-        tryRepeat(pressLB, shoulderHoldRef.current.lb, now, () => changePage(-1));
-        tryRepeat(pressRB, shoulderHoldRef.current.rb, now, () => changePage(1));
         tryRepeat(pressLT, triggerHoldRef.current.lt, now, () => changePage(-1));
         tryRepeat(pressRT, triggerHoldRef.current.rt, now, () => changePage(1));
         tryRepeat(volumeUp, volumeStickHoldRef.current.up, now, () => {
@@ -579,7 +598,7 @@ export const ThemeWiiU: React.FC<{ config: Config; selectedEmu: number; setSelec
     return () => {
       window.cancelAnimationFrame(rafId);
     };
-  }, [changePage, focusedGameIndex, launchGameByIndex, moveFocus, onToggleMute, onVolumeAdjust]);
+  }, [changePage, focusedGameIndex, inputLocked, launchGameByIndex, moveFocus, onToggleMute, onVolumeAdjust]);
 
   useEffect(() => {
     return () => {
@@ -654,10 +673,11 @@ export const ThemeWiiU: React.FC<{ config: Config; selectedEmu: number; setSelec
         minHeight: '100vh',
         position: 'relative',
         overflow: 'hidden',
-        background:
-          'radial-gradient(1300px 680px at 50% -28%, rgba(255,255,255,1) 0%, rgba(241,245,247,1) 50%, rgba(224,231,236,1) 100%)',
+        background: isDark
+          ? 'radial-gradient(1300px 680px at 50% -28%, rgba(32, 43, 61, 1) 0%, rgba(17, 23, 33, 1) 52%, rgba(8, 11, 17, 1) 100%)'
+          : 'radial-gradient(1300px 680px at 50% -28%, rgba(255,255,255,1) 0%, rgba(241,245,247,1) 50%, rgba(224,231,236,1) 100%)',
         fontFamily: "'Trebuchet MS', 'Segoe UI', sans-serif",
-        color: '#3c4a5f',
+        color: textMain,
       }}
     >
       <style>
@@ -691,6 +711,34 @@ export const ThemeWiiU: React.FC<{ config: Config; selectedEmu: number; setSelec
             15% { opacity: 0.45; }
             45% { opacity: 0.25; }
             100% { transform: translateX(135%); opacity: 0; }
+          }
+
+          @keyframes wiiuDarkSpotDriftA {
+            0% { left: 3%; top: 4%; transform: scale(1); }
+            25% { left: 62%; top: 10%; transform: scale(1.05); }
+            50% { left: 70%; top: 62%; transform: scale(0.98); }
+            75% { left: 18%; top: 72%; transform: scale(1.04); }
+            100% { left: 3%; top: 4%; transform: scale(1); }
+          }
+
+          @keyframes wiiuDarkSpotDriftB {
+            0% { right: 2%; bottom: 4%; transform: scale(1); }
+            25% { right: 58%; bottom: 12%; transform: scale(1.04); }
+            50% { right: 66%; bottom: 60%; transform: scale(0.98); }
+            75% { right: 12%; bottom: 72%; transform: scale(1.05); }
+            100% { right: 2%; bottom: 4%; transform: scale(1); }
+          }
+
+          @keyframes wiiuDarkSpotPulseA {
+            0% { opacity: 0.58; }
+            50% { opacity: 0.82; }
+            100% { opacity: 0.58; }
+          }
+
+          @keyframes wiiuDarkSpotPulseB {
+            0% { opacity: 0.52; }
+            50% { opacity: 0.78; }
+            100% { opacity: 0.52; }
           }
 
           .wiiu-float-shard {
@@ -767,8 +815,9 @@ export const ThemeWiiU: React.FC<{ config: Config; selectedEmu: number; setSelec
           position: 'absolute',
           inset: 0,
           pointerEvents: 'none',
-          background:
-            'radial-gradient(620px 280px at 22% 20%, rgba(255,255,255,0.66) 0%, rgba(255,255,255,0) 72%), radial-gradient(720px 320px at 78% 72%, rgba(198,214,226,0.16) 0%, rgba(198,214,226,0) 74%)',
+          background: isDark
+            ? 'radial-gradient(1300px 680px at 50% -28%, rgba(32, 43, 61, 1) 0%, rgba(17, 23, 33, 1) 52%, rgba(8, 11, 17, 1) 100%)'
+            : 'radial-gradient(620px 280px at 22% 20%, rgba(255,255,255,0.66) 0%, rgba(255,255,255,0) 72%), radial-gradient(720px 320px at 78% 72%, rgba(198,214,226,0.16) 0%, rgba(198,214,226,0) 74%)',
         }}
       />
 
@@ -823,9 +872,9 @@ export const ThemeWiiU: React.FC<{ config: Config; selectedEmu: number; setSelec
                 width: '100%',
                 height: '100%',
                 borderRadius: shard.radius,
-                border: '1px solid rgba(172, 192, 208, 0.75)',
-                background: 'linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(216,231,241,0.52) 100%)',
-                boxShadow: '0 10px 18px rgba(69, 90, 111, 0.22), inset 0 1px 0 rgba(255,255,255,0.78)',
+                border: isDark ? '1px solid rgba(90, 108, 126, 0.66)' : '1px solid rgba(172, 192, 208, 0.75)',
+                background: isDark ? 'linear-gradient(180deg, rgba(54, 64, 78, 0.95) 0%, rgba(26, 32, 42, 0.72) 100%)' : 'linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(216,231,241,0.52) 100%)',
+                boxShadow: isDark ? '0 10px 18px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255,255,255,0.08)' : '0 10px 18px rgba(69, 90, 111, 0.22), inset 0 1px 0 rgba(255,255,255,0.78)',
                 opacity: shard.opacity,
                 backdropFilter: `blur(${shard.blur}px)`,
                 WebkitBackdropFilter: `blur(${shard.blur}px)`,
@@ -837,78 +886,43 @@ export const ThemeWiiU: React.FC<{ config: Config; selectedEmu: number; setSelec
           })()
         ))}
 
-        <div
-          className="wiiu-float-blob"
-          style={{
-            position: 'absolute',
-            left: '12%',
-            top: '64%',
-            width: 220,
-            height: 140,
-            borderRadius: '50%',
-            background: 'radial-gradient(circle at 35% 35%, rgba(255,255,255,0.55) 0%, rgba(217,230,240,0.08) 76%)',
-            filter: 'blur(18px)',
-            opacity: 0.65,
-            ['--bdur' as any]: '12.8s',
-            ['--bdelay' as any]: '0.2s',
-            ['--bx' as any]: '16px',
-            ['--by' as any]: '-10px',
-          }}
-        />
-        <div
-          className="wiiu-float-blob"
-          style={{
-            position: 'absolute',
-            right: '8%',
-            top: '26%',
-            width: 250,
-            height: 160,
-            borderRadius: '50%',
-            background: 'radial-gradient(circle at 40% 40%, rgba(255,255,255,0.52) 0%, rgba(209,224,236,0.06) 78%)',
-            filter: 'blur(20px)',
-            opacity: 0.58,
-            ['--bdur' as any]: '14.6s',
-            ['--bdelay' as any]: '1.1s',
-            ['--bx' as any]: '-14px',
-            ['--by' as any]: '12px',
-          }}
-        />
-        <div
-          className="wiiu-float-blob"
-          style={{
-            position: 'absolute',
-            left: '42%',
-            top: '14%',
-            width: 190,
-            height: 120,
-            borderRadius: '50%',
-            background: 'radial-gradient(circle at 44% 35%, rgba(255,255,255,0.48) 0%, rgba(206,223,236,0.07) 80%)',
-            filter: 'blur(17px)',
-            opacity: 0.52,
-            ['--bdur' as any]: '13.4s',
-            ['--bdelay' as any]: '0.8s',
-            ['--bx' as any]: '10px',
-            ['--by' as any]: '-8px',
-          }}
-        />
-        <div
-          className="wiiu-float-blob"
-          style={{
-            position: 'absolute',
-            left: '64%',
-            top: '74%',
-            width: 210,
-            height: 130,
-            borderRadius: '50%',
-            background: 'radial-gradient(circle at 38% 38%, rgba(255,255,255,0.44) 0%, rgba(203,220,233,0.06) 80%)',
-            filter: 'blur(19px)',
-            opacity: 0.48,
-            ['--bdur' as any]: '15.2s',
-            ['--bdelay' as any]: '1.7s',
-            ['--bx' as any]: '-12px',
-            ['--by' as any]: '-9px',
-          }}
-        />
+        {isDark && (
+          <>
+            <div
+              className="wiiu-float-blob"
+              style={{
+                position: 'absolute',
+                left: '3%',
+                top: '4%',
+                width: 320,
+                height: 220,
+                borderRadius: '50%',
+                background: 'radial-gradient(circle at 36% 36%, rgba(255,255,255,0.20) 0%, rgba(255,255,255,0.06) 44%, rgba(255,255,255,0) 76%)',
+                filter: 'blur(26px)',
+                opacity: 0.78,
+                animation: 'wiiuDarkSpotDriftA 16s ease-in-out infinite, wiiuDarkSpotPulseA 6.8s ease-in-out infinite',
+                willChange: 'transform, opacity, left, top',
+              }}
+            />
+            <div
+              className="wiiu-float-blob"
+              style={{
+                position: 'absolute',
+                right: '2%',
+                bottom: '4%',
+                width: 340,
+                height: 240,
+                borderRadius: '50%',
+                background: 'radial-gradient(circle at 64% 62%, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.05) 46%, rgba(255,255,255,0) 78%)',
+                filter: 'blur(28px)',
+                opacity: 0.7,
+                animation: 'wiiuDarkSpotDriftB 18s ease-in-out infinite, wiiuDarkSpotPulseB 7.6s ease-in-out infinite',
+                animationDelay: '0.8s, 0s',
+                willChange: 'transform, opacity, right, bottom',
+              }}
+            />
+          </>
+        )}
       </div>
 
       <div
@@ -925,14 +939,14 @@ export const ThemeWiiU: React.FC<{ config: Config; selectedEmu: number; setSelec
         }}
       >
         {loading ? (
-          <div style={{ minHeight: 420, display: 'grid', placeItems: 'center', fontWeight: 700, color: '#4c5b71' }}>
+            <div style={{ minHeight: 420, display: 'grid', placeItems: 'center', fontWeight: 700, color: textMuted }}>
             Loading games...
           </div>
         ) : games.length === 0 ? (
           <div style={{ minHeight: 420, display: 'grid', placeItems: 'center', textAlign: 'center' }}>
             <div>
               <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>No games found</div>
-              <div style={{ fontSize: 13, color: '#697a90' }}>{emu.gamesDir}</div>
+              <div style={{ fontSize: 13, color: textMuted }}>{emu.gamesDir}</div>
             </div>
           </div>
         ) : (
@@ -958,8 +972,19 @@ export const ThemeWiiU: React.FC<{ config: Config; selectedEmu: number; setSelec
                     tileSize={tileSize}
                     isHovered={hoveredGameIndex === absoluteIndex}
                     isFocused={focusedGameIndex === absoluteIndex}
-                    onActivate={() => launchGameByIndex(absoluteIndex)}
+                    themeVariant={themeVariant}
+                    onActivate={() => {
+                      if (inputLocked) {
+                        return;
+                      }
+
+                      launchGameByIndex(absoluteIndex);
+                    }}
                     onHoverStart={() => {
+                      if (inputLocked) {
+                        return;
+                      }
+
                       setControllerActive(false);
                       setFocusedGameIndex(absoluteIndex);
                       setHoveredGameIndex(absoluteIndex);
@@ -980,9 +1005,9 @@ export const ThemeWiiU: React.FC<{ config: Config; selectedEmu: number; setSelec
                     width: 34,
                     height: 34,
                     borderRadius: 999,
-                    border: '1px solid rgba(176, 189, 200, 0.85)',
-                    background: currentPage === 0 ? 'rgba(255,255,255,0.48)' : 'rgba(255,255,255,0.92)',
-                    color: currentPage === 0 ? '#9ca9b8' : '#61748b',
+                      border: isDark ? '1px solid rgba(84, 103, 121, 0.7)' : '1px solid rgba(176, 189, 200, 0.85)',
+                      background: currentPage === 0 ? (isDark ? 'rgba(23, 30, 40, 0.5)' : 'rgba(255,255,255,0.48)') : (isDark ? 'rgba(23, 30, 40, 0.92)' : 'rgba(255,255,255,0.92)'),
+                      color: currentPage === 0 ? (isDark ? '#73849a' : '#9ca9b8') : textStrong,
                     fontSize: 20,
                     lineHeight: '30px',
                     cursor: currentPage === 0 ? 'default' : 'pointer',
@@ -1008,7 +1033,7 @@ export const ThemeWiiU: React.FC<{ config: Config; selectedEmu: number; setSelec
                         height: pageIndex === currentPage ? 12 : 8,
                         borderRadius: 999,
                         border: 'none',
-                        background: pageIndex === currentPage ? '#00bde8' : '#aebbc7',
+                        background: pageIndex === currentPage ? '#00bde8' : (isDark ? '#6c8096' : '#aebbc7'),
                         boxShadow: pageIndex === currentPage ? '0 0 0 2px rgba(0, 189, 232, 0.24)' : 'none',
                         cursor: 'pointer',
                         padding: 0,
@@ -1025,9 +1050,9 @@ export const ThemeWiiU: React.FC<{ config: Config; selectedEmu: number; setSelec
                     width: 34,
                     height: 34,
                     borderRadius: 999,
-                    border: '1px solid rgba(176, 189, 200, 0.85)',
-                    background: currentPage === totalPages - 1 ? 'rgba(255,255,255,0.48)' : 'rgba(255,255,255,0.92)',
-                    color: currentPage === totalPages - 1 ? '#9ca9b8' : '#61748b',
+                      border: isDark ? '1px solid rgba(84, 103, 121, 0.7)' : '1px solid rgba(176, 189, 200, 0.85)',
+                      background: currentPage === totalPages - 1 ? (isDark ? 'rgba(23, 30, 40, 0.5)' : 'rgba(255,255,255,0.48)') : (isDark ? 'rgba(23, 30, 40, 0.92)' : 'rgba(255,255,255,0.92)'),
+                      color: currentPage === totalPages - 1 ? (isDark ? '#73849a' : '#9ca9b8') : textStrong,
                     fontSize: 20,
                     lineHeight: '30px',
                     cursor: currentPage === totalPages - 1 ? 'default' : 'pointer',
@@ -1050,8 +1075,8 @@ export const ThemeWiiU: React.FC<{ config: Config; selectedEmu: number; setSelec
             transform: 'translateX(-50%)',
             padding: '9px 14px',
             borderRadius: 12,
-            background: 'rgba(49, 63, 82, 0.88)',
-            color: '#f2f6fa',
+            background: isDark ? 'rgba(12, 17, 25, 0.92)' : 'rgba(49, 63, 82, 0.88)',
+            color: textStrong,
             fontSize: 13,
             fontWeight: 600,
             boxShadow: '0 8px 18px rgba(20, 31, 46, 0.32)',

@@ -13,8 +13,13 @@ export type EmulatorConfig = {
   gamesDir: string;
 };
 
+export type ThemeVariant = 'light' | 'dark';
+
 export type Config = {
   emulators: EmulatorConfig[];
+  themeVariant?: ThemeVariant;
+  menuVolume?: number;
+  lastSelectedEmulatorIndex?: number;
 };
 
 export type GameEntry = {
@@ -27,6 +32,7 @@ export type GameEntry = {
 export const App: React.FC = () => {
   const [config, setConfig] = useState<Config | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isEditingConfig, setIsEditingConfig] = useState(false);
 
   useEffect(() => {
     const load = async () => {
@@ -76,6 +82,25 @@ export const App: React.FC = () => {
     );
   }
 
-  if (!config) return <ConfigPrompt onSave={setConfig} />;
-  return <MainMenu config={config} />;
+  if (!config) {
+    return <ConfigPrompt onSave={setConfig} />;
+  }
+
+  if (isEditingConfig) {
+    return (
+      <ConfigPrompt
+        initialConfig={config}
+        onSave={nextConfig => {
+          if (nextConfig) {
+            setConfig(nextConfig);
+          }
+
+          setIsEditingConfig(false);
+        }}
+        onCancel={() => setIsEditingConfig(false)}
+      />
+    );
+  }
+
+  return <MainMenu config={config} onOpenSettings={() => setIsEditingConfig(true)} />;
 };

@@ -4,9 +4,11 @@ import { GameEntry } from './App';
 type GameCardProps = {
   game: GameEntry;
   cardBackground: string;
+  themeVariant: 'light' | 'dark';
 };
 
-export const GameCard: React.FC<GameCardProps> = ({ game, cardBackground }) => {
+export const GameCard: React.FC<GameCardProps> = ({ game, cardBackground, themeVariant }) => {
+  const isDark = themeVariant === 'dark';
   const [thumbnailIndex, setThumbnailIndex] = useState(0);
   const currentThumbnail = game.thumbnailUrls[thumbnailIndex];
 
@@ -22,9 +24,9 @@ export const GameCard: React.FC<GameCardProps> = ({ game, cardBackground }) => {
         minHeight: 344,
         maxHeight: 344,
         padding: 12,
-        boxShadow: '0 2px 8px #0006',
+        boxShadow: isDark ? '0 2px 8px #0006' : '0 2px 8px rgba(15, 23, 42, 0.16)',
         fontWeight: 400,
-        color: '#fff',
+        color: isDark ? '#fff' : '#0f1720',
         position: 'relative',
         boxSizing: 'border-box',
         overflow: 'hidden',
@@ -38,7 +40,7 @@ export const GameCard: React.FC<GameCardProps> = ({ game, cardBackground }) => {
           right: 12,
           bottom: 48,
           borderRadius: 12,
-          background: '#111827',
+          background: isDark ? '#111827' : '#edf3f8',
           display: 'grid',
           placeItems: 'center',
           overflow: 'hidden',
@@ -83,6 +85,7 @@ export const GameCard: React.FC<GameCardProps> = ({ game, cardBackground }) => {
           textAlign: 'center',
           padding: '0 4px',
           boxSizing: 'border-box',
+          color: isDark ? '#fff' : '#0f1720',
         }}
       >
         {game.displayName}

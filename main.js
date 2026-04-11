@@ -67,10 +67,17 @@ function buildThumbnailUrlCandidates(platform, gameId) {
     return [];
   }
 
-  return [
-    `http://art.gametdb.com/${platform}/cover/US/${gameId}.jpg`,
-    `http://art.gametdb.com/${platform}/cover/US/${gameId}.png`,
-  ];
+  const regions = ['US', 'EN', 'JA', 'FR', 'DE', 'ES', 'IT', 'NL'];
+  const extensions = ['jpg', 'png', 'webp'];
+  const candidates = [];
+
+  for (const region of regions) {
+    for (const extension of extensions) {
+      candidates.push(`http://art.gametdb.com/${platform}/cover/${region}/${gameId}.${extension}`);
+    }
+  }
+
+  return candidates;
 }
 
 function formatGameEntry(fileName, emulatorName) {

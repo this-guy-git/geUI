@@ -1,6 +1,7 @@
 {
   "name": "geui",
   "version": "0.1.0",
+  "author": {"name": "this guy"},
   "main": "main.js",
   "private": true,
   "scripts": {
